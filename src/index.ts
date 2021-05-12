@@ -63,6 +63,7 @@ const createNewBlock = (data: string): Block => {
     data,
     newTimestamp
   );
+  addBlock(newBlock);
   return newBlock;
 };
 
@@ -73,5 +74,23 @@ const isBlockValid = (candidateBlock: Block, prevBlock: Block): boolean => {
     return false;
   } else if (prevBlock.hash !== candidateBlock.prevHash) {
     return false;
+  } else if (getHashforBlock(candidateBlock) !== candidateBlock.hash) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const getHashforBlock = (aBlock: Block): string =>
+  Block.calculateBlockHash(
+    aBlock.index,
+    aBlock.prevHash,
+    aBlock.timestamp,
+    aBlock.data
+  );
+
+const addBlock = (candidateBlock: Block): void => {
+  if (isBlockValid(candidateBlock, getLastestBlock())) {
+    blockchain.push(candidateBlock);
   }
 };
