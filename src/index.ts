@@ -1,18 +1,25 @@
 import * as CryptoJS from "crypto-js";
 
 class Block {
-  public index: number;
-  public hash: string;
-  public prevHash: string;
-  public data: string;
-  public timestamp: number;
-
   static calculateBlockHash = (
     index: number,
     prevHash: string,
     timestamp: number,
     data: string
   ): string => CryptoJS.SHA256(index + prevHash + timestamp + data).toString();
+
+  static validateStructure = (aBlock: Block): boolean =>
+    typeof aBlock.index === "number" &&
+    typeof aBlock.hash === "string" &&
+    typeof aBlock.prevHash === "string" &&
+    typeof aBlock.timestamp === "number" &&
+    typeof aBlock.data === "string";
+
+  public index: number;
+  public hash: string;
+  public prevHash: string;
+  public data: string;
+  public timestamp: number;
 
   constructor(
     index: number,
@@ -59,4 +66,12 @@ const createNewBlock = (data: string): Block => {
   return newBlock;
 };
 
-console.log(createNewBlock("hi"));
+const isBlockValid = (candidateBlock: Block, prevBlock: Block): boolean => {
+  if (!Block.validateStructure(candidateBlock)) {
+    return false;
+  } else if (prevBlock.index + 1 !== candidateBlock.index) {
+    return false;
+  } else if (prevBlock.hash !== candidateBlock.prevHash) {
+    return false;
+  }
+};
