@@ -35,16 +35,21 @@ class Block {
     this.timestamp = timestamp;
   }
 }
+const getNewTimestamp = (): number => Math.round(new Date().getTime() / 1000);
 
-const genesisBlock: Block = new Block(0, "2020202020", "", "Hello", 12345);
+const genesisBlock: Block = new Block(
+  0,
+  Block.calculateBlockHash(0, "", getNewTimestamp(), "firstBlock"),
+  "",
+  "firstBlock",
+  getNewTimestamp()
+);
 
 let blockchain: Block[] = [genesisBlock];
 
 const getBlockchain = (): Block[] => blockchain;
 
 const getLastestBlock = (): Block => blockchain[blockchain.length - 1];
-
-const getNewTimestamp = (): number => Math.round(new Date().getTime() / 1000);
 
 const createNewBlock = (data: string): Block => {
   const prevBlock: Block = getLastestBlock();
@@ -94,3 +99,8 @@ const addBlock = (candidateBlock: Block): void => {
     blockchain.push(candidateBlock);
   }
 };
+
+createNewBlock("secondBlock");
+createNewBlock("thirdBlock");
+
+console.log(blockchain);

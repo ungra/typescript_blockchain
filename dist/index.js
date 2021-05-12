@@ -16,11 +16,11 @@ Block.validateStructure = (aBlock) => typeof aBlock.index === "number" &&
     typeof aBlock.prevHash === "string" &&
     typeof aBlock.timestamp === "number" &&
     typeof aBlock.data === "string";
-const genesisBlock = new Block(0, "2020202020", "", "Hello", 12345);
+const getNewTimestamp = () => Math.round(new Date().getTime() / 1000);
+const genesisBlock = new Block(0, Block.calculateBlockHash(0, "", getNewTimestamp(), "firstBlock"), "", "firstBlock", getNewTimestamp());
 let blockchain = [genesisBlock];
 const getBlockchain = () => blockchain;
 const getLastestBlock = () => blockchain[blockchain.length - 1];
-const getNewTimestamp = () => Math.round(new Date().getTime() / 1000);
 const createNewBlock = (data) => {
     const prevBlock = getLastestBlock();
     const newIndex = prevBlock.index + 1;
@@ -53,4 +53,7 @@ const addBlock = (candidateBlock) => {
         blockchain.push(candidateBlock);
     }
 };
+createNewBlock("secondBlock");
+createNewBlock("thirdBlock");
+console.log(blockchain);
 //# sourceMappingURL=index.js.map
